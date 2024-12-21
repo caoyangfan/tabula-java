@@ -55,7 +55,7 @@ public class FileExtractStrategyFactory {
         // String fileTemplateTypeKey = FileTemplateTypeEnum.DEFAULT.getCode();
         String fileTemplateTypeKey = FileTemplateTypeEnum.ICBC_DG.getCode();
         FileExtractStrategy strategy = FileExtractStrategyFactory.getFileExtractStrategy(fileTemplateTypeKey);
-        String pdfFile = "工商银行对公.pdf";
+        String pdfFile = "src/test/resources/other/工商银行对公.pdf";
         strategy.readPdf(pdfFile);
     }
 

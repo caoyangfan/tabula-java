@@ -11,6 +11,6 @@ public class ICBCDGFileExtractStrategy extends AbstractICBCFileExtractStrategy {
     @Override
     public void readPdf(String fileName) {
         ICBCPublicExtractPdf extractPdf = new ICBCPublicExtractPdf();
-        extractPdf.start(fileName);
+        extractPdf.execute(fileName);
     }
 }

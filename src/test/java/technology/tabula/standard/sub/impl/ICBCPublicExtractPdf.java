@@ -35,6 +35,7 @@ public class ICBCPublicExtractPdf extends AbstractExtractPdf<BankFlowEntity> {
         if (CollectionUtil.isNotEmpty(dataList)) {
             for (ExtractObjectEntity entity : dataList) {
                 List<List<FieldEntity>> data = entity.getData();
+                // 每一个模板的结构不一样，需要单独抽取数据，逻辑不一样
                 if (CollectionUtil.isNotEmpty(data)) {
                     for (int i = 1; i < data.size(); i++) {
                         List<FieldEntity> fieldData = data.get(i);

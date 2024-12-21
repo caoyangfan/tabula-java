@@ -2,6 +2,8 @@ package technology.tabula.standard;
 
 import technology.tabula.entity.ExtractObjectEntity;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -10,9 +12,17 @@ import java.util.List;
  */
 public interface ExtractPdf<T> {
 
-    void start(String fileName);
+    void execute(String fileName);
 
-    String extractPdfToJson(String pdfFile);
+    void execute(File file);
+
+    void execute(InputStream inputStream);
+
+    String extractPdfFilePathToJson(String pdfFile);
+
+    String extractPdfFileToJson(File pdfFile);
+
+    String extractPdfInputStreamToJson(InputStream pdfFile);
 
     List<ExtractObjectEntity> convertJsonToList(String pdfFileJsonStr);
 
