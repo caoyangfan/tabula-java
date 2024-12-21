@@ -12,6 +12,7 @@ import org.apache.commons.cli.ParseException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import technology.tabula.entity.ExtractObjectEntity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -314,6 +315,98 @@ public class TestCommandLineAppPdf {
      * @throws ParseException
      * @throws IOException
      */
+    public static String testExtractPdfSpecificFileAllPageToDir(String originFileName) throws ParseException, IOException {
+        // List<String> allFileNames = FileUtil.listFileNames("D:\\work\\opensource\\tabula-java\\src\\test\\resources\\other");
+        String s = "";
+        List<String> allFileNames = new ArrayList<>();
+        System.out.println(originFileName);
+        allFileNames.add(originFileName);
+
+        for (String fileName : allFileNames) {
+            if (fileName.endsWith(".pdf")) {
+                try {
+                    String fileNameWithoutSuffix = fileName.substring(0, fileName.lastIndexOf("."));
+                    System.out.println(fileName + "=====" + fileNameWithoutSuffix);
+                    // fileName = "农行个人董秀娟.pdf"
+                    String expectedJson = UtilsForTesting.loadJson("src/test/resources/other/" + fileName);
+
+                    s = jsonFromCommandLineArgs(new String[]{
+                            "src/test/resources/other/" + fileName,
+                            "-p", "all", "-f",
+                            "JSON"
+                    });
+                    /*FileOutputStream originOutputStream = new FileOutputStream("C:\\Users\\caoyangfan\\Desktop\\" +
+                            "out\\所有页\\" + fileNameWithoutSuffix + "pdf-json-all-origin.json");
+                    IoUtil.write(originOutputStream, true, s.getBytes());
+                    String format = JSONStrFormatter.format(s);
+                    FileOutputStream formatOutputStream = new FileOutputStream("C:\\Users\\caoyangfan\\Desktop\\" +
+                            "out\\所有页\\" + fileNameWithoutSuffix + "pdf-json-all-format.json");
+                    IoUtil.write(formatOutputStream, true, format.getBytes());
+                    System.out.println(s);
+                    System.out.println(format);*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                System.out.println(fileName + "，不是pdf格式文档，不解析文件");
+            }
+        }
+        return s;
+    }
+
+
+    /**
+     * 指定文件第一页
+     *
+     * @throws ParseException
+     * @throws IOException
+     */
+    public static String testExtractPdfSpecificFileFirstPageToDir(String originFileName) {
+        // List<String> allFileNames = FileUtil.listFileNames("D:\\work\\opensource\\tabula-java\\src\\test\\resources\\other");
+        // System.out.println(allFileNames);
+        String s = "";
+        List<String> allFileNames = new ArrayList<>();
+        allFileNames.add(originFileName);
+        for (String fileName : allFileNames) {
+            if (fileName.endsWith(".pdf")) {
+                try {
+                    String fileNameWithoutSuffix = fileName.substring(0, fileName.lastIndexOf("."));
+                    System.out.println(fileName + "=====" + fileNameWithoutSuffix);
+                    // fileName = "农行个人董秀娟.pdf"
+                    String expectedJson = UtilsForTesting.loadJson("src/test/resources/other/" + fileName);
+
+                    s = jsonFromCommandLineArgs(new String[]{
+                            "src/test/resources/other/" + fileName,
+                            "-p", "1", "-f",
+                            "JSON"
+                    });
+                    FileOutputStream originOutputStream = new FileOutputStream("C:\\Users\\caoyangfan\\Desktop\\" +
+                            "out\\第一页\\" + fileNameWithoutSuffix + "pdf-json-1-origin.json");
+                    IoUtil.write(originOutputStream, true, s.getBytes());
+                    String format = JSONStrFormatter.format(s);
+                    FileOutputStream formatOutputStream = new FileOutputStream("C:\\Users\\caoyangfan\\Desktop\\" +
+                            "out\\第一页\\" + fileNameWithoutSuffix + "pdf-json-1-format.json");
+                    IoUtil.write(formatOutputStream, true, format.getBytes());
+//                    System.out.println(s);
+//                    System.out.println(format);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println(fileName + "，不是pdf格式文档，不解析文件");
+            }
+        }
+        return s;
+    }
+
+
+    /**
+     * 所有银行-所有页
+     *
+     * @throws ParseException
+     * @throws IOException
+     */
     public static String testExtractPdfSpecificFileAllPage(String originFileName) throws ParseException, IOException {
         // List<String> allFileNames = FileUtil.listFileNames("D:\\work\\opensource\\tabula-java\\src\\test\\resources\\other");
         String s = "";
@@ -356,7 +449,7 @@ public class TestCommandLineAppPdf {
 
 
     /**
-     * 所有指定文件第一页
+     * 指定文件第一页
      *
      * @throws ParseException
      * @throws IOException
@@ -403,8 +496,13 @@ public class TestCommandLineAppPdf {
     public static void main(String[] args) {
 
         String originFileName = "中国银行对公.pdf";
+        // 生成指定文件第一页
         // specificFileFirstPage(originFileName);
-        specificFileAllPage(originFileName);
+        // 生成指定文件所有页
+        // specificFileAllPage(originFileName);
+
+        // 生成指定文件第一页到指定目录
+        testExtractPdfSpecificFileFirstPageToDir(originFileName);
 
     }
 
@@ -435,9 +533,13 @@ public class TestCommandLineAppPdf {
             if (JSONUtil.isJson(jsonString)) {
                 System.out.println(originFileName + ",返回结构是json格式的字符串");
             }
-            JSONArray objects = JSONUtil.parseArray(jsonString);
-            for (Object object : objects) {
-                System.out.println(object);
+            List<ExtractObjectEntity> list = JSONUtil.toList(jsonString, ExtractObjectEntity.class);
+//            JSONArray objects = JSONUtil.parseArray(jsonString);
+//            for (Object object : objects) {
+//                System.out.println(object);
+//            }
+            for (ExtractObjectEntity extractObjectEntity : list) {
+                System.out.println(extractObjectEntity);
             }
 
         } catch (ParseException e) {
@@ -446,17 +548,6 @@ public class TestCommandLineAppPdf {
             throw new RuntimeException(e);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     @Test
